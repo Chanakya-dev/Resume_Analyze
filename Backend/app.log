@@ -1,0 +1,84 @@
+2025-03-24 22:05:04,676 - INFO - Upload directory set to: uploads
+2025-03-24 22:05:04,677 - INFO - Groq API key loaded successfully
+2025-03-24 22:05:04,678 - INFO - API endpoint set to: https://api.groq.com/openai/v1/chat/completions
+2025-03-24 22:05:29,974 - INFO - Starting analyze-resume operation 20250324220529
+2025-03-24 22:05:29,975 - INFO - Received file: Python + GenAI Program  AcademixEdu.pdf (size: 24576684 bytes)
+2025-03-24 22:05:29,975 - INFO - Saving file to: uploads\Python + GenAI Program  AcademixEdu.pdf
+2025-03-24 22:05:30,025 - INFO - File saved successfully in 0.05 seconds
+2025-03-24 22:05:30,025 - INFO - Starting text extraction from PDF
+2025-03-24 22:05:30,026 - INFO - Attempting to extract text from PDF: uploads\Python + GenAI Program  AcademixEdu.pdf
+2025-03-24 22:05:30,230 - INFO - Successfully extracted 3716 characters from PDF in 0.20 seconds
+2025-03-24 22:05:30,234 - INFO - Constructed prompt (length: 4088 characters)
+2025-03-24 22:05:30,234 - INFO - Prepared Groq API request payload
+2025-03-24 22:05:30,235 - INFO - Sending request to Groq API...
+2025-03-24 22:05:30,416 - INFO - Received API response in 0.18 seconds (status: 400)
+2025-03-24 22:05:30,416 - ERROR - AI API request failed with status 400: {"error":{"message":"The model `mixtral-8x7b-32768` has been decommissioned and is no longer supported. Please refer to https://console.groq.com/docs/deprecations for a recommendation on which model to use instead.","type":"invalid_request_error","code":"model_decommissioned"}}
+
+2025-03-24 22:05:30,417 - ERROR - Unexpected error: 400: AI API request failed with status 400: {"error":{"message":"The model `mixtral-8x7b-32768` has been decommissioned and is no longer supported. Please refer to https://console.groq.com/docs/deprecations for a recommendation on which model to use instead.","type":"invalid_request_error","code":"model_decommissioned"}}
+Traceback (most recent call last):
+  File "E:\Gen_AI\Backend\main.py", line 142, in analyze_resume
+    raise HTTPException(status_code=response.status_code, detail=error_msg)
+fastapi.exceptions.HTTPException: 400: AI API request failed with status 400: {"error":{"message":"The model `mixtral-8x7b-32768` has been decommissioned and is no longer supported. Please refer to https://console.groq.com/docs/deprecations for a recommendation on which model to use instead.","type":"invalid_request_error","code":"model_decommissioned"}}
+
+2025-03-24 22:05:30,421 - INFO - Cleaning up file after error: uploads\Python + GenAI Program  AcademixEdu.pdf
+2025-03-24 22:07:30,306 - INFO - Upload directory set to: uploads
+2025-03-24 22:07:30,307 - INFO - Groq API key loaded successfully
+2025-03-24 22:07:30,307 - INFO - API endpoint set to: https://api.groq.com/openai/v1/chat/completions
+2025-03-24 22:07:31,484 - INFO - Starting analyze-resume operation 20250324220731
+2025-03-24 22:07:31,485 - INFO - Received file: Python + GenAI Program  AcademixEdu.pdf (size: 24576684 bytes)
+2025-03-24 22:07:31,485 - INFO - Saving file to: uploads\Python + GenAI Program  AcademixEdu.pdf
+2025-03-24 22:07:31,536 - INFO - File saved successfully in 0.05 seconds
+2025-03-24 22:07:31,537 - INFO - Starting text extraction from PDF
+2025-03-24 22:07:31,537 - INFO - Attempting to extract text from PDF: uploads\Python + GenAI Program  AcademixEdu.pdf
+2025-03-24 22:07:31,684 - INFO - Successfully extracted 3716 characters from PDF in 0.15 seconds
+2025-03-24 22:07:31,688 - INFO - Constructed prompt (length: 4088 characters)
+2025-03-24 22:07:31,689 - INFO - Prepared Groq API request payload
+2025-03-24 22:07:31,689 - INFO - Sending request to Groq API...
+2025-03-24 22:07:33,328 - INFO - Received API response in 1.64 seconds (status: 200)
+2025-03-24 22:07:33,330 - INFO - Successfully received analysis from Groq API
+2025-03-24 22:07:33,330 - INFO - Cleaning up file: uploads\Python + GenAI Program  AcademixEdu.pdf
+2025-03-24 22:07:33,335 - INFO - Operation 20250324220731 completed successfully
+2025-03-24 22:08:00,266 - INFO - Starting analyze-resume operation 20250324220800
+2025-03-24 22:08:00,266 - INFO - Received file: Python + GenAI Program  AcademixEdu.pdf (size: 24576684 bytes)
+2025-03-24 22:08:00,267 - INFO - Saving file to: uploads\Python + GenAI Program  AcademixEdu.pdf
+2025-03-24 22:08:00,312 - INFO - File saved successfully in 0.04 seconds
+2025-03-24 22:08:00,313 - INFO - Starting text extraction from PDF
+2025-03-24 22:08:00,313 - INFO - Attempting to extract text from PDF: uploads\Python + GenAI Program  AcademixEdu.pdf
+2025-03-24 22:08:00,451 - INFO - Successfully extracted 3716 characters from PDF in 0.14 seconds
+2025-03-24 22:08:00,455 - INFO - Constructed prompt (length: 4054 characters)
+2025-03-24 22:08:00,456 - INFO - Prepared Groq API request payload
+2025-03-24 22:08:00,456 - INFO - Sending request to Groq API...
+2025-03-24 22:08:02,263 - INFO - Received API response in 1.81 seconds (status: 200)
+2025-03-24 22:08:02,264 - INFO - Successfully received analysis from Groq API
+2025-03-24 22:08:02,265 - INFO - Cleaning up file: uploads\Python + GenAI Program  AcademixEdu.pdf
+2025-03-24 22:08:02,269 - INFO - Operation 20250324220800 completed successfully
+2025-03-25 08:54:14,870 - INFO - Upload directory set to: uploads
+2025-03-25 08:54:14,871 - INFO - Groq API key loaded successfully
+2025-03-25 08:54:14,872 - INFO - API endpoint set to: https://api.groq.com/openai/v1/chat/completions
+2025-03-25 08:55:04,807 - INFO - Starting analyze-resume operation 20250325085504
+2025-03-25 08:55:04,814 - INFO - Received file: Python + GenAI Program  AcademixEdu.pdf (size: 24576684 bytes)
+2025-03-25 08:55:04,829 - INFO - Saving file to: uploads\Python + GenAI Program  AcademixEdu.pdf
+2025-03-25 08:55:04,885 - INFO - File saved successfully in 0.05 seconds
+2025-03-25 08:55:04,886 - INFO - Attempting to extract text from PDF: uploads\Python + GenAI Program  AcademixEdu.pdf
+2025-03-25 08:55:05,140 - INFO - Successfully extracted 3716 characters from PDF in 0.25 seconds
+2025-03-25 08:55:05,144 - INFO - Sending request to Groq API...
+2025-03-25 08:55:07,861 - INFO - Received API response in 2.72 seconds (status: 200)
+2025-03-25 08:55:07,863 - INFO - Successfully received analysis from Groq API
+2025-03-25 08:56:25,359 - INFO - Starting analyze-resume operation 20250325085625
+2025-03-25 08:56:25,369 - INFO - Received file: Python + GenAI Program  AcademixEdu.pdf (size: 24576684 bytes)
+2025-03-25 08:56:25,369 - INFO - Saving file to: uploads\Python + GenAI Program  AcademixEdu.pdf
+2025-03-25 08:56:25,427 - INFO - File saved successfully in 0.06 seconds
+2025-03-25 08:56:25,428 - INFO - Attempting to extract text from PDF: uploads\Python + GenAI Program  AcademixEdu.pdf
+2025-03-25 08:56:25,604 - INFO - Successfully extracted 3716 characters from PDF in 0.18 seconds
+2025-03-25 08:56:25,608 - INFO - Sending request to Groq API...
+2025-03-25 08:56:27,326 - INFO - Received API response in 1.72 seconds (status: 200)
+2025-03-25 08:56:27,327 - INFO - Successfully received analysis from Groq API
+2025-03-25 08:56:30,103 - INFO - Upload directory set to: uploads
+2025-03-25 08:56:30,104 - INFO - Groq API key loaded successfully
+2025-03-25 08:56:30,105 - INFO - API endpoint set to: https://api.groq.com/openai/v1/chat/completions
+2025-03-25 08:59:14,080 - INFO - Upload directory set to: uploads
+2025-03-25 08:59:14,081 - INFO - Groq API key loaded successfully
+2025-03-25 08:59:14,081 - INFO - API endpoint set to: https://api.groq.com/openai/v1/chat/completions
+INFO:main:Upload directory set to: uploads
+INFO:main:Groq API key loaded successfully
+INFO:main:API endpoint set to: https://api.groq.com/openai/v1/chat/completions
