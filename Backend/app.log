@@ -82,3 +82,75 @@ fastapi.exceptions.HTTPException: 400: AI API request failed with status 400: {"
 INFO:main:Upload directory set to: uploads
 INFO:main:Groq API key loaded successfully
 INFO:main:API endpoint set to: https://api.groq.com/openai/v1/chat/completions
+INFO:main:Upload directory set to: uploads
+INFO:main:Groq API key loaded successfully
+INFO:main:API endpoint set to: https://api.groq.com/openai/v1/chat/completions
+INFO:main:Starting analyze-resume operation
+INFO:main:Received file: Tharun.pdf
+INFO:main:Saving file to: uploads\Tharun.pdf
+INFO:main:File saved successfully
+INFO:main:Attempting to extract text from PDF: uploads\Tharun.pdf
+INFO:main:Successfully extracted 3882 characters from PDF
+INFO:main:Sending request to Groq API...
+INFO:main:Received API response (status: 200)
+INFO:main:Successfully received analysis from Groq API
+INFO:main:Starting analyze-resume operation
+INFO:main:Received file: Tharun.pdf
+INFO:main:Saving file to: uploads\Tharun.pdf
+INFO:main:File saved successfully
+INFO:main:Attempting to extract text from PDF: uploads\Tharun.pdf
+INFO:main:Successfully extracted 3882 characters from PDF
+INFO:main:Sending request to Groq API...
+INFO:main:Received API response (status: 200)
+INFO:main:Successfully received analysis from Groq API
+INFO:main:Starting analyze-resume operation
+INFO:main:Received file: Tharun.pdf
+INFO:main:Saving file to: uploads\Tharun.pdf
+INFO:main:File saved successfully
+INFO:main:Attempting to extract text from PDF: uploads\Tharun.pdf
+INFO:main:Successfully extracted 3882 characters from PDF
+INFO:main:Sending request to Groq API...
+INFO:main:Received API response (status: 200)
+INFO:main:Successfully received analysis from Groq API
+INFO:main:Upload directory set to: uploads
+INFO:main:Groq API key loaded successfully
+INFO:main:API endpoint set to: https://api.groq.com/openai/v1/chat/completions
+INFO:main:Upload directory set to: uploads
+INFO:main:Groq API key loaded successfully
+INFO:main:API endpoint set to: https://api.groq.com/openai/v1/chat/completions
+INFO:main:Starting analyze-resume operation
+INFO:main:Received file: Tharun.pdf
+INFO:main:Saving file to: uploads\Tharun.pdf
+INFO:main:File saved successfully
+INFO:main:Attempting to extract text from PDF: uploads\Tharun.pdf
+INFO:main:Successfully extracted 3882 characters from PDF
+INFO:main:Sending request to Groq API...
+INFO:main:Received API response (status: 200)
+INFO:main:Successfully received analysis from Groq API
+INFO:main:Starting analyze-resume operation
+INFO:main:Received file: Tharun.pdf
+INFO:main:Saving file to: uploads\Tharun.pdf
+INFO:main:File saved successfully
+INFO:main:Attempting to extract text from PDF: uploads\Tharun.pdf
+INFO:main:Successfully extracted 3882 characters from PDF
+INFO:main:Sending request to Groq API...
+INFO:main:Received API response (status: 200)
+INFO:main:Successfully received analysis from Groq API
+INFO:main:Starting analyze-resume operation
+INFO:main:Received file: Tharun.pdf
+INFO:main:Saving file to: uploads\Tharun.pdf
+INFO:main:File saved successfully
+INFO:main:Attempting to extract text from PDF: uploads\Tharun.pdf
+INFO:main:Successfully extracted 3882 characters from PDF
+INFO:main:Sending request to Groq API...
+INFO:main:Received API response (status: 200)
+INFO:main:Successfully received analysis from Groq API
+2025-03-27 05:09:10,243 - main - INFO - Sending request to AI API...
+2025-03-27 05:09:12,132 - main - INFO - Received response from AI API
+2025-03-27 05:09:12,134 - main - INFO - Successfully analyzed 2 resumes
+2025-03-27 05:42:12,631 - main - INFO - Sending request to AI API...
+2025-03-27 05:42:14,615 - main - INFO - Received response from AI API
+2025-03-27 05:42:14,616 - main - INFO - Successfully analyzed 2 resumes
+2025-03-27 05:44:48,466 - main - INFO - Sending request to AI API...
+2025-03-27 05:44:50,433 - main - INFO - Received response from AI API
+2025-03-27 05:44:50,434 - main - INFO - Successfully analyzed 2 resumes
