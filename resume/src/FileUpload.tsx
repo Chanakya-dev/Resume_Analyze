@@ -69,7 +69,7 @@ const FileUpload = () => {
       
       formData.append("description", description);
 
-      const response = await fetch("http://127.0.0.1:8000/analyze-resumes", {
+      const response = await fetch("http://127.0.0.1:8080/analyze-resumes", {
         method: "POST",
         body: formData,
       });
