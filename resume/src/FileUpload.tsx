@@ -14,27 +14,46 @@ import {
   Container
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useNavigate } from "react-router-dom";
+
+export interface AnalysisResult {
+  success: boolean;
+  candidates: Candidate[];
+  request_id: string;
+  timestamp: string;
+  processed_files: number;
+  overall_summary?: string;
+}
+
+export interface Candidate {
+  filename: string;
+  ranking: number;
+  suitability_score: number;
+  strengths: string[];
+  weaknesses: string[];
+  summary: string;
+  recommendation: string;
+  improvement_suggestions?: string[];
+}
 
 const FileUpload = () => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [description, setDescription] = useState("");
-  const [analysis, setAnalysis] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setError("");
     if (event.target.files) {
       const files = Array.from(event.target.files);
       
-      // Validate PDF files
       const invalidFiles = files.filter(file => file.type !== "application/pdf");
       if (invalidFiles.length > 0) {
         setError(`Invalid file type: ${invalidFiles.map(f => f.name).join(", ")}. Only PDF files are allowed.`);
         return;
       }
 
-      // Add new files to existing selection
       setSelectedFiles(prev => [...prev, ...files]);
     }
   };
@@ -44,7 +63,6 @@ const FileUpload = () => {
   };
 
   const handleUpload = async () => {
-    // Validation
     if (selectedFiles.length === 0) {
       setError("Please select at least one resume");
       return;
@@ -57,19 +75,15 @@ const FileUpload = () => {
 
     setLoading(true);
     setError("");
-    setAnalysis("");
 
     try {
       const formData = new FormData();
-      
-      // Append each file with the correct field name
       selectedFiles.forEach((file) => {
         formData.append("files", file);
       });
-      
       formData.append("description", description);
 
-      const response = await fetch("http://127.0.0.1:8080/analyze-resumes", {
+      const response = await fetch("http://127.0.0.1:8090/analyze-resumes", {
         method: "POST",
         body: formData,
       });
@@ -79,13 +93,14 @@ const FileUpload = () => {
         throw new Error(errorData.detail || `Server error: ${response.status}`);
       }
 
-      const result = await response.json();
+      const result: AnalysisResult = await response.json();
       
       if (!result.success) {
-        throw new Error(result.message || "Analysis failed");
+        throw new Error("Analysis failed");
       }
       
-      setAnalysis(result.analysis);
+      // Navigate to results page with the analysis data
+      navigate("/results", { state: { analysisResult: result } });
     } catch (error) {
       console.error("Upload error:", error);
       setError(error instanceof Error ? error.message : "An unknown error occurred");
@@ -99,8 +114,6 @@ const FileUpload = () => {
       height: "100vh",
       display: "flex",
       flexDirection: "column",
-      width: "500vh",
-      ml: 10,
       py: 4
     }}>
       <Paper sx={{
@@ -108,7 +121,6 @@ const FileUpload = () => {
         display: "flex",
         flexDirection: "column",
         p: 4,
-        overflowY: "scroll"
       }}>
         <Typography variant="h4" gutterBottom>
           Multi-Resume Analysis
@@ -196,31 +208,6 @@ const FileUpload = () => {
               "Analyze Resumes"
             )}
           </Button>
-
-          {analysis && (
-            <Box sx={{ 
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-              minHeight: 0  // Allows the content to scroll
-            }}>
-              <Typography variant="h6" gutterBottom>
-                Analysis Results:
-              </Typography>
-              <Paper 
-                elevation={2} 
-                sx={{ 
-                  flex: 1,
-                  p: 3, 
-                  whiteSpace: "pre-wrap", 
-                  overflow: "auto",
-                  bgcolor: 'background.paper'
-                }}
-              >
-                {analysis}
-              </Paper>
-            </Box>
-          )}
         </Box>
       </Paper>
     </Container>
