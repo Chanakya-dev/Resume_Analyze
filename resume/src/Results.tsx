@@ -75,9 +75,9 @@ const CandidateCard = ({ candidate }: { candidate: CandidateAnalysis }) => {
           <Chip
             label={`Score: ${candidate.overall_score.toFixed(2)}`}
             color={
-              candidate.overall_score >= 80
+              candidate.overall_score >= 9
                 ? "success"
-                : candidate.overall_score >= 50
+                : candidate.overall_score >= 8
                 ? "warning"
                 : "error"
             }
