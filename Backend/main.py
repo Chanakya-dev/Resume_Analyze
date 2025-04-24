@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile, Form, HTTPException, status
+from fastapi import FastAPI, File, UploadFile, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from typing import List, Optional
@@ -10,64 +10,67 @@ import logging
 from pydantic import BaseModel
 from datetime import datetime
 import uuid
+import json
+import re
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
+# Load environment variables
 load_dotenv()
 
-# Configure logging
+# Logging setup
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler(),
-        logging.FileHandler('app.log')
-    ]
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[logging.StreamHandler(), logging.FileHandler('app.log')]
 )
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("ResumeAnalyzer")
 
-# Initialize FastAPI app
+# FastAPI app initialization
 app = FastAPI(
     title="Resume Analysis API",
     version="1.0.0",
-    description="API for analyzing and ranking resumes against job descriptions",
-    docs_url="/docs",
-    redoc_url=None
+    description="Analyze resumes against job descriptions using AI",
+    docs_url="/docs"
 )
 
-# CORS Configuration
+# CORS setup
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, specify your frontend URL(s)
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"],
+    allow_headers=["*"]
 )
 
 # Constants
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
-MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
+MAX_FILE_SIZE = 10 * 1024 * 1024  # 10 MB
 ALLOWED_FILE_TYPES = ["application/pdf"]
+
+# AI Configuration
+AI_API_KEY = os.getenv("AI_API_KEY")
+API_ENDPOINT = os.getenv("API_ENDPOINT", "https://api.groq.com/openai/v1/chat/completions")
 AI_MODEL = "llama3-70b-8192"
 TEMPERATURE = 0.7
-TIMEOUT = 30  # seconds
+TIMEOUT = 30
 
-# Load environment variables
-AI_API_KEY = os.getenv("AI_API_KEY")
-if not AI_API_KEY:
-    logger.error("AI_API_KEY environment variable not set!")
-    raise RuntimeError("AI_API_KEY environment variable is required")
+# Pydantic Models
+class CandidateAnalysis(BaseModel):
+    filename: str
+    strengths: str
+    weaknesses: str
+    overall_score: float
+    recommendation: str
+    comments: Optional[str] = None
 
-API_ENDPOINT = os.getenv("API_ENDPOINT", "https://api.groq.com/openai/v1/chat/completions")
-
-# Response Models
-class AnalysisResponse(BaseModel):
+class AnalysisResult(BaseModel):
     success: bool
-    analysis: str
     request_id: str
     timestamp: str
-    processed_files: int
+    job_summary: str
+    top_candidates: List[str]
+    candidates: List[CandidateAnalysis]
 
 class ErrorResponse(BaseModel):
     success: bool
@@ -76,174 +79,145 @@ class ErrorResponse(BaseModel):
     timestamp: str
     details: Optional[str] = None
 
-# Utility Functions
+# Helpers
 def generate_request_id() -> str:
     return str(uuid.uuid4())
 
 def get_timestamp() -> str:
     return datetime.now().isoformat()
 
-def validate_file(file: UploadFile) -> None:
-    """Validate file size and type"""
+def validate_file(file: UploadFile):
+    """Validate file type and size."""
     if file.content_type not in ALLOWED_FILE_TYPES:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Invalid file type '{file.content_type}'. Only PDF files are allowed."
-        )
+        raise HTTPException(status_code=400, detail="Only PDF files are allowed.")
     
-    file.file.seek(0, 2)  # Seek to end
+    file.file.seek(0, 2)  # Seek to the end of the file to determine its size
     file_size = file.file.tell()
-    file.file.seek(0)  # Reset pointer
-    
+    file.file.seek(0)  # Reset the file pointer to the beginning
+
     if file_size > MAX_FILE_SIZE:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"File '{file.filename}' too large ({file_size//1024}KB). Max size is {MAX_FILE_SIZE//(1024*1024)}MB"
+            status_code=400,
+            detail=f"File '{file.filename}' is too large. Max size is {MAX_FILE_SIZE // (1024*1024)}MB."
         )
 
-def extract_text_from_pdf(pdf_path: str) -> str:
-    """Extract text from PDF using PyMuPDF"""
+def extract_text_from_pdf(path: str) -> str:
+    """Extract text from PDF file."""
     try:
-        doc = fitz.open(pdf_path)
-        text = "".join([page.get_text() for page in doc])
-        logger.debug(f"Extracted {len(text)} characters from PDF")
-        return text
+        doc = fitz.open(path)
+        return "".join([page.get_text() for page in doc])
     except Exception as e:
-        logger.error(f"PDF extraction failed: {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Failed to extract text from PDF: {str(e)}"
-        )
+        raise HTTPException(status_code=400, detail=f"PDF extraction error: {e}")
 
-def analyze_with_ai(prompt: str) -> str:
-    """Send analysis request to AI API"""
-    headers = {
-        "Authorization": f"Bearer {AI_API_KEY}",
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-    }
-    
-    payload = {
-        "model": AI_MODEL,
-        "messages": [{"role": "user", "content": prompt}],
-        "temperature": TEMPERATURE
-    }
-
+def call_ai_analysis(prompt: str) -> str:
+    """Call AI API to analyze the resumes."""
     try:
-        logger.info("Sending request to AI API...")
-        response = requests.post(
-            API_ENDPOINT,
-            headers=headers,
-            json=payload,
-            timeout=TIMEOUT
-        )
-        response.raise_for_status()
-        
-        response_data = response.json()
-        analysis = response_data.get("choices", [{}])[0].get("message", {}).get("content", "")
-        logger.info("Received response from AI API")
-        return analysis
-    
-    except requests.exceptions.RequestException as e:
-        logger.error(f"AI API request failed: {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_502_BAD_GATEWAY,
-            detail=f"AI service unavailable: {str(e)}"
-        )
-
-# API Endpoints
-@app.post(
-    "/analyze-resumes",
-    response_model=AnalysisResponse,
-    status_code=status.HTTP_200_OK,
-    responses={
-        400: {"model": ErrorResponse},
-        500: {"model": ErrorResponse},
-        502: {"model": ErrorResponse}
-    }
-)
-async def analyze_resumes(
-    files: List[UploadFile] = File(...),
-    description: str = Form(...)):
-    
-    """Analyze multiple resumes against a job description"""
-    request_id = generate_request_id()
-    timestamp = get_timestamp()
-    
-    try:
-        # Validate input
-        if not files:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="No files uploaded"
-            )
-        
-        if not description.strip():
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Job description cannot be empty"
-            )
-
-        # Process files
-        resume_data = []
-        for file in files:
-            validate_file(file)
-            
-            unique_filename = f"{uuid.uuid4()}_{file.filename}"
-            file_path = os.path.join(UPLOAD_DIR, unique_filename)
-            
-            try:
-                # Save file temporarily
-                with open(file_path, "wb") as buffer:
-                    shutil.copyfileobj(file.file, buffer)
-                
-                # Extract text
-                resume_text = extract_text_from_pdf(file_path)
-                resume_data.append({
-                    "filename": file.filename,
-                    "content": resume_text
-                })
-                
-            finally:
-                # Clean up temp file
-                if os.path.exists(file_path):
-                    os.remove(file_path)
-
-        # Prepare analysis prompt
-        prompt = f"""
-        Analyze these resumes against the job description and provide:
-        1. Ranking from most to least suitable
-        2. Detailed comparison for each candidate
-        3. Key strengths and weaknesses
-        4. Recommend which candidates are the best fit
-        
-        Job Description:
-        {description.strip()}
-        
-        Resumes:
-        {resume_data}
-        """
-
-        # Get AI analysis
-        analysis = analyze_with_ai(prompt)
-        
-        logger.info(f"Successfully analyzed {len(resume_data)} resumes")
-        
-        return {
-            "success": True,
-            "analysis": analysis,
-            "request_id": request_id,
-            "timestamp": timestamp,
-            "processed_files": len(resume_data)
+        headers = {
+            "Authorization": f"Bearer {AI_API_KEY}",
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "model": AI_MODEL,
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": TEMPERATURE
         }
 
-    except HTTPException as he:
-        logger.error(f"Request {request_id} failed: {he.detail}")
-        raise he
-        
+        res = requests.post(API_ENDPOINT, headers=headers, json=payload, timeout=TIMEOUT)
+        res.raise_for_status()
+        return res.json().get("choices", [{}])[0].get("message", {}).get("content", "")
+    
+    except requests.exceptions.RequestException as e:
+        logger.error(f"AI request failed: {str(e)}")
+        raise HTTPException(status_code=502, detail=f"AI service error: {e}")
+
+def extract_json_block(text: str) -> str:
+    """Extract JSON block from raw AI response."""
+    match = re.search(r"\{.*\}", text, re.DOTALL)
+    return match.group(0) if match else ""
+
+# Main endpoint
+@app.post("/analyze-resumes", response_model=AnalysisResult, responses={500: {"model": ErrorResponse}})
+async def analyze_resumes(
+    files: List[UploadFile] = File(...),
+    description: str = Form(...)
+):
+    request_id = generate_request_id()
+    timestamp = get_timestamp()
+
+    # Validate input
+    if not files:
+        raise HTTPException(status_code=400, detail="No files uploaded.")
+    if not description.strip():
+        raise HTTPException(status_code=400, detail="Job description is required.")
+
+    resume_data = []
+    temp_files = []
+
+    for file in files:
+        validate_file(file)
+        filename = f"{uuid.uuid4()}_{file.filename}"
+        path = os.path.join(UPLOAD_DIR, filename)
+
+        try:
+            with open(path, "wb") as f:
+                shutil.copyfileobj(file.file, f)
+            text = extract_text_from_pdf(path)
+            resume_data.append({"filename": file.filename, "content": text})
+            temp_files.append(path)
+        except Exception as e:
+            logger.error(f"Error with {file.filename}: {e}")
+        finally:
+            file.file.close()
+
+    # Clean up temporary files after processing
+    for temp_file in temp_files:
+        if os.path.exists(temp_file):
+            os.remove(temp_file)
+
+    # Prepare AI prompt
+    prompt = f"""
+You are a career coach and AI hiring assistant.
+Analyze the resumes below based on this job description.
+
+Job Description:
+{description}
+
+Resumes:
+{resume_data}
+
+Respond ONLY with valid JSON. Do NOT include explanations, markdown, or text outside the JSON object.
+
+Return the following structure:
+{{
+  "job_summary": "...",
+  "top_candidates": ["filename1", "filename2"],
+  "candidates": [
+    {{
+      "filename": "...",
+      "strengths": "...",
+      "weaknesses": "...",
+      "overall_score": 8.5,
+      "recommendation": "Highly recommended",
+      "comments": "Optional"
+    }}
+  ]
+}}
+"""
+
+    # Call AI API and handle response
+    ai_response = call_ai_analysis(prompt)
+    logger.info(f"Received AI response: {ai_response[:500]}...")
+    json_string = extract_json_block(ai_response)
+
+    try:
+        structured = json.loads(json_string)
+        logger.info(f"Structured response: {structured}")
+        structured.update({
+            "success": True,
+            "request_id": request_id,
+            "timestamp": timestamp
+        })
+        return structured
     except Exception as e:
-        logger.error(f"Unexpected error in request {request_id}: {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Internal server error: {str(e)}"
-        )
+        logger.error(f"AI response parsing failed: {e}\nRaw response: {ai_response}")
+        raise HTTPException(status_code=500, detail="Invalid response format from AI.")

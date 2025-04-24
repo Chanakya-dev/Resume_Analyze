@@ -16,25 +16,24 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
 
-export interface AnalysisResult {
-  success: boolean;
-  candidates: Candidate[];
-  request_id: string;
-  timestamp: string;
-  processed_files: number;
-  overall_summary?: string;
+export interface CandidateAnalysis {
+  filename: string;
+  strengths: string;
+  weaknesses: string;
+  overall_score: number;
+  recommendation: string;
+  comments?: string;
 }
 
-export interface Candidate {
-  filename: string;
-  ranking: number;
-  suitability_score: number;
-  strengths: string[];
-  weaknesses: string[];
-  summary: string;
-  recommendation: string;
-  improvement_suggestions?: string[];
+export interface AnalysisResult {
+  success: boolean;
+  request_id: string;
+  timestamp: string;
+  job_summary: string;
+  top_candidates: string[]; // List of filenames of top candidates
+  candidates: CandidateAnalysis[]; // List of candidate analysis details
 }
+
 
 const FileUpload = () => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -47,8 +46,8 @@ const FileUpload = () => {
     setError("");
     if (event.target.files) {
       const files = Array.from(event.target.files);
-      
       const invalidFiles = files.filter(file => file.type !== "application/pdf");
+
       if (invalidFiles.length > 0) {
         setError(`Invalid file type: ${invalidFiles.map(f => f.name).join(", ")}. Only PDF files are allowed.`);
         return;
@@ -83,7 +82,7 @@ const FileUpload = () => {
       });
       formData.append("description", description);
 
-      const response = await fetch("http://127.0.0.1:8090/analyze-resumes", {
+      const response = await fetch("http://127.0.0.1:8070/analyze-resumes", {
         method: "POST",
         body: formData,
       });
@@ -94,12 +93,10 @@ const FileUpload = () => {
       }
 
       const result: AnalysisResult = await response.json();
-      
       if (!result.success) {
         throw new Error("Analysis failed");
       }
-      
-      // Navigate to results page with the analysis data
+      console.log(result);
       navigate("/results", { state: { analysisResult: result } });
     } catch (error) {
       console.error("Upload error:", error);
@@ -110,103 +107,53 @@ const FileUpload = () => {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ 
-      height: "100vh",
-      display: "flex",
-      flexDirection: "column",
-      py: 4
-    }}>
-      <Paper sx={{
-        flex: 1,
-        display: "flex",
-        flexDirection: "column",
-        p: 4,
-      }}>
-        <Typography variant="h4" gutterBottom>
-          Multi-Resume Analysis
-        </Typography>
+    <Container maxWidth="md" sx={{ py: 4 }}>
+      <Paper sx={{ p: 4 }}>
+        <Typography variant="h4" gutterBottom>Upload Resumes</Typography>
 
         {error && (
-          <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError("")}>
+          <Alert severity="error" sx={{ mb: 2 }}>
             {error}
           </Alert>
         )}
 
-        <Box sx={{ flex: 1, display: "flex", flexDirection: "column", gap: 3 }}>
-          <TextField
-            label="Job Description"
-            fullWidth
-            multiline
-            minRows={4}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            margin="normal"
-            required
-          />
+        <TextField
+          label="Job Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          fullWidth
+          multiline
+          rows={4}
+          sx={{ mb: 3 }}
+        />
 
-          <Box>
-            <Button
-              variant="contained"
-              component="label"
-              sx={{ mr: 2 }}
+        <Button variant="contained" component="label" sx={{ mb: 2 }}>
+          Select PDF Resumes
+          <input type="file" accept="application/pdf" multiple hidden onChange={handleFileChange} />
+        </Button>
+
+        <List dense>
+          {selectedFiles.map((file, index) => (
+            <ListItem
+              key={index}
+              secondaryAction={
+                <IconButton edge="end" onClick={() => removeFile(index)}>
+                  <DeleteIcon />
+                </IconButton>
+              }
             >
-              Add PDF Files
-              <input
-                type="file"
-                hidden
-                accept="application/pdf"
-                multiple
-                onChange={handleFileChange}
-              />
-            </Button>
-            
-            {selectedFiles.length > 0 && (
-              <Typography variant="subtitle1" sx={{ mt: 2, mb: 1 }}>
-                Selected Files ({selectedFiles.length}):
-              </Typography>
-            )}
+              <ListItemText primary={file.name} />
+            </ListItem>
+          ))}
+        </List>
 
-            <List dense sx={{ 
-              maxHeight: 200, 
-              overflow: 'auto', 
-              border: '1px solid #ddd', 
-              borderRadius: 1 
-            }}>
-              {selectedFiles.map((file, index) => (
-                <ListItem 
-                  key={`${file.name}-${index}`}
-                  secondaryAction={
-                    <IconButton edge="end" onClick={() => removeFile(index)}>
-                      <DeleteIcon />
-                    </IconButton>
-                  }
-                >
-                  <ListItemText 
-                    primary={file.name} 
-                    secondary={`${(file.size / 1024).toFixed(1)} KB`} 
-                  />
-                </ListItem>
-              ))}
-            </List>
-          </Box>
-
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleUpload}
-            fullWidth
-            disabled={loading || selectedFiles.length === 0}
-            size="large"
-            sx={{ py: 1.5 }}
+        <Box sx={{ mt: 3 }}>
+          <Button 
+            variant="contained" 
+            onClick={handleUpload} 
+            disabled={loading}
           >
-            {loading ? (
-              <>
-                <CircularProgress size={24} sx={{ mr: 2 }} />
-                Analyzing...
-              </>
-            ) : (
-              "Analyze Resumes"
-            )}
+            {loading ? <CircularProgress size={24} /> : "Analyze Resumes"}
           </Button>
         </Box>
       </Paper>

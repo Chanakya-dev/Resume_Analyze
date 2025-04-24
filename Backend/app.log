@@ -174,3 +174,136 @@ INFO:main:Successfully received analysis from Groq API
 2025-03-28 05:41:03,123 - main - INFO - Sending request to AI API...
 2025-03-28 05:41:05,029 - main - INFO - Received response from AI API
 2025-03-28 05:41:05,030 - main - INFO - Successfully analyzed 2 resumes
+2025-04-23 09:42:27,660 - fastapi - ERROR - Form data requires "python-multipart" to be installed. 
+You can install "python-multipart" with: 
+
+pip install python-multipart
+
+2025-04-23 09:45:25,931 - main - INFO - Sending request to AI API...
+2025-04-23 09:45:27,915 - main - INFO - Received response from AI API
+2025-04-23 09:45:27,916 - main - INFO - Successfully analyzed 2 resumes
+2025-04-23 09:46:50,394 - main - INFO - Sending request to AI API...
+2025-04-23 09:46:52,596 - main - INFO - Received response from AI API
+2025-04-23 09:46:52,597 - main - INFO - Successfully analyzed 2 resumes
+2025-04-23 09:48:37,473 - main - INFO - Sending request to AI API...
+2025-04-23 09:48:39,599 - main - INFO - Received response from AI API
+2025-04-23 09:48:39,600 - main - INFO - Successfully analyzed 2 resumes
+2025-04-23 09:50:36,476 - main - INFO - Sending request to AI API...
+2025-04-23 09:50:38,519 - main - INFO - Received response from AI API
+2025-04-23 09:50:38,521 - main - INFO - Successfully analyzed 2 resumes
+2025-04-23 09:52:35,015 - main - INFO - Sending request to AI API...
+2025-04-23 09:52:36,542 - main - INFO - Received response from AI API
+2025-04-23 09:52:36,543 - main - INFO - Successfully analyzed 2 resumes
+2025-04-23 09:53:48,783 - main - INFO - Sending request to AI API...
+2025-04-23 09:53:50,186 - main - INFO - Received response from AI API
+2025-04-23 09:53:50,187 - main - INFO - Successfully analyzed 2 resumes
+2025-04-23 09:56:24,329 - main - INFO - Sending request to AI API...
+2025-04-23 09:56:25,966 - main - INFO - Received response from AI API
+2025-04-23 09:56:25,968 - main - INFO - Successfully analyzed 2 resumes
+2025-04-23 09:59:14,892 - main - INFO - Sending request to AI API...
+2025-04-23 09:59:16,336 - main - INFO - Received response from AI API
+2025-04-23 09:59:16,338 - main - INFO - Successfully analyzed 2 resumes
+2025-04-23 10:04:00,382 - main - INFO - Sending request to AI API...
+2025-04-23 10:04:01,853 - main - INFO - Received response from AI API
+2025-04-23 10:04:01,854 - main - INFO - Successfully analyzed 2 resumes
+2025-04-23 10:17:45,565 - main - INFO - Sending request to AI API...
+2025-04-23 10:17:47,700 - main - INFO - Received response from AI API
+2025-04-23 10:17:47,702 - main - INFO - Successfully analyzed 2 resumes
+2025-04-23 10:28:34,829 - main - INFO - Sending request to AI API...
+2025-04-23 10:28:36,502 - main - INFO - Received response from AI API
+2025-04-23 10:28:36,504 - main - INFO - Successfully analyzed 2 resumes
+2025-04-23 10:34:06,624 - main - INFO - Sending request to AI API...
+2025-04-23 10:34:08,554 - main - INFO - Received response from AI API
+2025-04-23 10:34:08,557 - main - INFO - Successfully analyzed 2 resumes
+2025-04-23 11:11:39,434 - main - INFO - Sending request to AI API...
+2025-04-23 11:11:41,656 - main - INFO - Received response from AI API
+2025-04-23 11:11:41,661 - main - INFO - Successfully analyzed 2 resumes
+2025-04-24 09:56:27,849 - main - INFO - Sending request to AI API...
+2025-04-24 09:56:29,779 - main - INFO - Received response from AI API
+2025-04-24 09:56:29,781 - main - INFO - Successfully analyzed 2 resumes
+2025-04-24 09:59:07,948 - main - ERROR - AI response parsing failed: invalid syntax (<string>, line 1)
+2025-04-24 10:02:19,378 - main - ERROR - AI response parsing failed: Expecting value: line 1 column 1 (char 0)
+Raw response: Here is the analysis of the resumes based on the job description:
+
+```
+{
+  "job_summary": "Java Developer",
+  "top_candidates": ["Chanakya Manas Resume.pdf", "Chanakya Manas Java.pdf"],
+  "candidates": [
+    {
+      "filename": "Chanakya Manas Resume.pdf",
+      "strengths": "Strong experience in Java development with Spring Boot, proficient in designing RESTful APIs and integrating databases using JDBC, Hibernate, and JPA. Skilled in frontend development with React, Redux, and JavaScript.",
+      "weaknesses": "Limited experience in other programming languages",
+      "overall_score": 9.0,
+      "recommendation": "Highly recommended",
+      "comments": "Strong candidate with diverse skill set and experience in building scalable web applications"
+    },
+    {
+      "filename": "Chanakya Manas Java.pdf",
+      "strengths": "Strong experience in Java development with Spring Boot, skilled in developing RESTful APIs and integrating relational databases using JDBC, Hibernate, and JPA. Proficient in implementing security architecture with Spring Security and JWT-based authentication.",
+      "weaknesses": "Limited experience in other programming languages",
+      "overall_score": 8.5,
+      "recommendation": "Recommended",
+      "comments": "Strong candidate with focus on Java development and security architecture"
+    }
+  ]
+}
+```
+
+Note: The scores and comments are subjective and based on the analysis of the resumes against the job description.
+2025-04-24 10:02:41,798 - main - ERROR - AI response parsing failed: Expecting value: line 1 column 1 (char 0)
+Raw response: Here is the analysis of the resumes based on the job description:
+
+```
+{
+  "job_summary": "Java Developer",
+  "top_candidates": ["Chanakya Manas Resume.pdf", "Chanakya Manas Java.pdf"],
+  "candidates": [
+    {
+      "filename": "Chanakya Manas Resume.pdf",
+      "strengths": "Strong experience in Java development with Spring Boot, proficient in designing RESTful APIs, and skilled in frontend development with React and Redux.",
+      "weaknesses": "Limited experience in other programming languages and frameworks.",
+      "overall_score": 9.0,
+      "recommendation": "Highly recommended",
+      "comments": "Chanakya has a strong background in Java development and has demonstrated proficiency in designing scalable RESTful APIs and building responsive UIs."
+    },
+    {
+      "filename": "Chanakya Manas Java.pdf",
+      "strengths": "Skilled in developing robust backend systems with Java and Spring Boot, experienced in implementing security architecture with Spring Security, and proficient in frontend development with React and Redux.",
+      "weaknesses": "Limited experience in other programming languages and frameworks.",
+      "overall_score": 9.2,
+      "recommendation": "Highly recommended",
+      "comments": "Chanakya has a strong background in Java development and has demonstrated proficiency in designing scalable RESTful APIs, building robust backend systems, and implementing security architecture with Spring Security."
+    }
+  ]
+}
+```
+
+Both candidates have strong experience in Java development with Spring Boot and have demonstrated proficiency in designing scalable RESTful APIs and building responsive UIs. They also have experience in implementing security architecture with Spring Security. However, they both have limited experience in other programming languages and frameworks. Overall, both candidates are highly recommended for the Java Developer position.
+2025-04-24 10:09:13,006 - INFO - Received AI response: {
+  "job_summary": "Java Developer",
+  "top_candidates": ["Chanakya Manas Resume.pdf", "Chanakya Manas Java.pdf"],
+  "candidates": [
+    {
+      "filename": "Chanakya Manas Resume.pdf",
+      "strengths": "Strong experience in Java, Spring Boot, and RESTful APIs. Proficient in Agile practices and SDLC. Experienced in frontend development using React and Redux.",
+      "weaknesses": "Limited experience in Docker and AWS deployment.",
+      "overall_score": 9.0,
+      "recommendation": "Highly rec...
+2025-04-24 10:11:12,044 - INFO - Received AI response: {
+  "job_summary": "Java Developer",
+  "top_candidates": ["Chanakya Manas Resume.pdf", "Chanakya Manas Java.pdf"],
+  "candidates": [
+    {
+      "filename": "Chanakya Manas Resume.pdf",
+      "strengths": "Strong experience in Java development, proficiency in Spring Boot, RESTful APIs, and database integration. Excellent skills in frontend development with React and Redux.",
+      "weaknesses": "Limited experience in other programming languages, no mention of testing frameworks or DevOps tools."...
+2025-04-24 10:11:12,057 - INFO - Structured response: {'job_summary': 'Java Developer', 'top_candidates': ['Chanakya Manas Resume.pdf', 'Chanakya Manas Java.pdf'], 'candidates': [{'filename': 'Chanakya Manas Resume.pdf', 'strengths': 'Strong experience in Java development, proficiency in Spring Boot, RESTful APIs, and database integration. Excellent skills in frontend development with React and Redux.', 'weaknesses': 'Limited experience in other programming languages, no mention of testing frameworks or DevOps tools.', 'overall_score': 9.0, 'recommendation': 'Highly recommended', 'comments': 'Ideal candidate for a Java developer position'}, {'filename': 'Chanakya Manas Java.pdf', 'strengths': 'Strong experience in Java development, expertise in Spring Framework, RESTful APIs, and database integration. Good understanding of Agile methodologies and cloud deployment.', 'weaknesses': 'Similar to the other resume, limited experience in other programming languages, no mention of testing frameworks or DevOps tools.', 'overall_score': 9.0, 'recommendation': 'Highly recommended', 'comments': 'Ideal candidate for a Java developer position'}]}
+2025-04-24 10:14:31,050 - INFO - Received AI response: {
+  "job_summary": "Developer role requiring skills in Java, Python, and frontend technologies such as React, with experience in building scalable web applications and RESTful APIs.",
+  "top_candidates": ["Chanakya Manas Resume.pdf", "Chanakya Manas Java.pdf"],
+  "candidates": [
+    {
+      "filename": "Chanakya Manas Resume.pdf",
+      "strengths": "Strong experience in building full-stack web applications, proficient in multiple technologies including Java, Python, React, and Spring Boot, with...
+2025-04-24 10:14:31,051 - INFO - Structured response: {'job_summary': 'Developer role requiring skills in Java, Python, and frontend technologies such as React, with experience in building scalable web applications and RESTful APIs.', 'top_candidates': ['Chanakya Manas Resume.pdf', 'Chanakya Manas Java.pdf'], 'candidates': [{'filename': 'Chanakya Manas Resume.pdf', 'strengths': 'Strong experience in building full-stack web applications, proficient in multiple technologies including Java, Python, React, and Spring Boot, with a strong understanding of RESTful APIs and database integration.', 'weaknesses': 'Limited project experience, but has a strong educational background and a variety of skills.', 'overall_score': 9.0, 'recommendation': 'Highly recommended', 'comments': 'Strong candidate with a wide range of skills and experience in building scalable web applications.'}, {'filename': 'Chanakya Manas Java.pdf', 'strengths': 'Strong experience in building scalable web applications using Java and Spring Boot, proficient in developing RESTful APIs and integrating relational databases.', 'weaknesses': 'Limited experience in frontend development, but has a strong understanding of backend systems and APIs.', 'overall_score': 8.5, 'recommendation': 'Recommended', 'comments': 'Strong candidate with a focus on Java and Spring Boot, but could benefit from additional experience in frontend development.'}]}

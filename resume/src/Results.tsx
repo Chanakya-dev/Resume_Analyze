@@ -1,11 +1,10 @@
-import React from "react";
-import { 
-  Box, 
-  Typography, 
-  Paper, 
-  Card, 
-  CardContent, 
-  Chip, 
+import {
+  Box,
+  Typography,
+  Paper,
+  Card,
+  CardContent,
+  Chip,
   Container,
   Divider,
   Grid,
@@ -14,12 +13,12 @@ import {
   Button
 } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Candidate, AnalysisResult } from "./FileUpload";
+import { CandidateAnalysis, AnalysisResult } from "./FileUpload"; // Adjusted import for new structure
 
 const Results = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const analysisResult = location.state?.analysisResult as AnalysisResult | undefined;
+  const analysisResult = location.state.analysisResult as AnalysisResult | undefined;
 
   if (!analysisResult) {
     return (
@@ -28,10 +27,7 @@ const Results = () => {
           <AlertTitle>No Analysis Data Found</AlertTitle>
           Please upload resumes and analyze them first.
         </Alert>
-        <Button 
-          variant="contained" 
-          onClick={() => navigate("/")}
-        >
+        <Button variant="contained" onClick={() => navigate("/")}>
           Go Back to Upload
         </Button>
       </Container>
@@ -44,16 +40,14 @@ const Results = () => {
         Analysis Results
       </Typography>
 
-      {analysisResult.overall_summary && (
+      {analysisResult && (
         <Paper elevation={3} sx={{ p: 3, mb: 4 }}>
           <Typography variant="h5" gutterBottom>
             Overall Summary
           </Typography>
-          <Typography variant="body1" paragraph>
-            {analysisResult.overall_summary}
-          </Typography>
           <Typography variant="subtitle2" color="text.secondary">
-            Processed {analysisResult.processed_files} resumes on {new Date(analysisResult.timestamp).toLocaleString()}
+            Processed {analysisResult.top_candidates.length} resumes on{" "}
+            {new Date(analysisResult.timestamp).toLocaleString()}
           </Typography>
         </Paper>
       )}
@@ -69,19 +63,23 @@ const Results = () => {
   );
 };
 
-const CandidateCard = ({ candidate }: { candidate: Candidate }) => {
+const CandidateCard = ({ candidate }: { candidate: CandidateAnalysis }) => {
+  const strengths = candidate.strengths.split(", "); // Assuming strengths are comma separated
+  const weaknesses = candidate.weaknesses.split(", "); // Assuming weaknesses are comma separated
+
   return (
     <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
       <CardContent sx={{ flexGrow: 1 }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-          <Typography variant="h6" component="div">
-            #{candidate.ranking} - {candidate.filename}
-          </Typography>
-          <Chip 
-            label={`Score: ${candidate.suitability_score}`}
+          <Typography variant="h6">{candidate.filename}</Typography>
+          <Chip
+            label={`Score: ${candidate.overall_score.toFixed(2)}`}
             color={
-              candidate.suitability_score >= 80 ? "success" :
-              candidate.suitability_score >= 50 ? "warning" : "error"
+              candidate.overall_score >= 80
+                ? "success"
+                : candidate.overall_score >= 50
+                ? "warning"
+                : "error"
             }
           />
         </Box>
@@ -93,14 +91,14 @@ const CandidateCard = ({ candidate }: { candidate: Candidate }) => {
         <Divider sx={{ my: 2 }} />
 
         <Typography variant="body2" paragraph>
-          {candidate.summary}
+          {candidate.comments}
         </Typography>
 
         <Typography variant="subtitle2" gutterBottom>
           Strengths:
         </Typography>
         <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 2 }}>
-          {candidate.strengths.map((strength, index) => (
+          {strengths.map((strength, index) => (
             <Chip key={index} label={strength} color="success" size="small" />
           ))}
         </Box>
@@ -109,25 +107,10 @@ const CandidateCard = ({ candidate }: { candidate: Candidate }) => {
           Weaknesses:
         </Typography>
         <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 2 }}>
-          {candidate.weaknesses.map((weakness, index) => (
+          {weaknesses.map((weakness, index) => (
             <Chip key={index} label={weakness} color="error" size="small" />
           ))}
         </Box>
-
-        {candidate.improvement_suggestions && (
-          <>
-            <Typography variant="subtitle2" gutterBottom>
-              Improvement Suggestions:
-            </Typography>
-            <Box component="ul" sx={{ pl: 2, mb: 0 }}>
-              {candidate.improvement_suggestions.map((suggestion, index) => (
-                <Box component="li" key={index}>
-                  <Typography variant="body2">{suggestion}</Typography>
-                </Box>
-              ))}
-            </Box>
-          </>
-        )}
       </CardContent>
     </Card>
   );
